@@ -5,16 +5,16 @@
 Features:
 - Setting Jam dan reminder Jam (jam tidak ter-reset kalo mati)
 - Setting Schedule
-  - Sunrise Start: Jam:Menit
-  - Sunrise Stop: Jam:Menit
-  - Sunglight Start: Jam:Menit
-  - Sunglight Stop: Jam:Menit
-  - Sunset Start: Jam:Menit
-  - Sunset Stop: Jam:Menit
-  - Moontime Start: Jam:Menit
-  - Moontime Stop: Jam:Menit
+  - Sunrise Start: jam:menit
+  - Sunrise Stop: jam:menit
+  - Sunglight Start: jam:menit
+  - Sunglight Stop: jam:menit
+  - Sunset Start: jam:menit
+  - Sunset Stop: jam:menit
+  - Moontime Start: jam:menit
+  - Moontime Stop: jam:menit
 - Setting Intensitas masing2
-  - Sunrise A > B > C >D
+  - Sunrise: A > B > C >D
   - SunriseA: xx %
   - SunriseB: xx %
   - SunriseC: xx %
@@ -32,4 +32,7 @@ Bahan-bahan:
 - [220v to 9v Power Switching](https://www.tokopedia.com/kedaianekabarang/9v-500ma-4-5w-switching-power-supply-module-modul-ac-dc-adaptor)
 - [Robodyn AC Dimmer](https://www.tokopedia.com/kyware/ac-light-dimmer-robotdyn-module-1-channel-220v-110v-logic-5v-3-3v)
 
-  
+
+- Referensi
+[1] https://www.youtube.com/watch?v=BhQWOv10Oag
+[2] https://circuitdigest.com/microcontroller-projects/ac-phase-angle-control-for-light-dimmers-and-motor-speed-control-using-555-timer-and-pwm-control
