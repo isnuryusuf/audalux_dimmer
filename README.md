@@ -2,7 +2,8 @@
 # Work In Progress - WIP
 # DISSCLAIMER: Use Your Own Risk!!!
 
-![Uploading image.png…]()
+![image](https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/ebcd8834-74fa-4541-93c9-def7004bf52f)
+
 
 
 
