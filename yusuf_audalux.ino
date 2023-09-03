@@ -2,6 +2,7 @@
 #include "LiquidCrystal.h"
 #include <EEPROM.h>
 #include <virtuabotixRTC.h>
+#include "avdweb_VirtualDelay.h"
 #define USE_SERIAL  Serial
 #define outputPin  3
 #define zerocross  2 // for boards with CHANGEBLE input pins
@@ -16,6 +17,7 @@ int adc_key_in  = 0;
 //dimmerLamp dimmer(outputPin, zerocross); //initialase port for dimmer for ESP8266, ESP32, Arduino due boards
 dimmerLamp dimmer(outputPin); //initialase port for dimmer for MEGA, Leonardo, UNO, Arduino M0, Arduino Zero
 
+VirtualDelay singleDelay; // default = millis
 int outVal = 0;
 
 // relay pins
@@ -125,6 +127,7 @@ void printSpace(int val)
 /* BEGIN LOOP                                         */
 /* ================================================== */
 void loop() {
+  dimmer.setPower(0); // setPower(0-100%);
   lcd.setCursor(0, 0); 
   lcd.print("JAM ");
   lcd.setCursor(4, 0);
@@ -224,7 +227,7 @@ void relayAction(int adrON, int adrOF, int pos, int pin) {
   int MinToday = (myRTC.hours * 60) + myRTC.minutes; //jam sekarang jadi total menit
   int MinEprON = (EEPROM.read(adrON) * 60) + EEPROM.read(adrON + 1); //jam+menit start dalam menit untuk semua schedule
   int MinEprOF = (EEPROM.read(adrOF) * 60) + EEPROM.read(adrOF + 1); //jam+menit stop dalam menit untuk semua schedule
-
+  
   lcd.setCursor(pos, 1);
   if (MinEprON == MinEprOF) {  // jika start-stop sama berarti tidak dipake
     lcd.print(" "); //tidak ada schedule di set
@@ -235,6 +238,7 @@ void relayAction(int adrON, int adrOF, int pos, int pin) {
     if ((MinEprON <= MinToday) && (MinEprOF > MinToday)) {
       lcd.print("*");
       runSchedule();
+      singleDelay.start(1000);
      }
   }
   else if (MinEprON > MinEprOF) {  // kondisi ON terjadi sampai besoknya
@@ -640,14 +644,14 @@ Moon 23:00 1380
   myRTC.updateTime();
   int MinToday = (myRTC.hours * 60) + myRTC.minutes; //jam sekarang jadi total menit
   //int MinToday = 1381;
-  int MinEprON1 = (EEPROM.read(2) * 60) + (EEPROM.read(3) + 0); //jam+menit start dalam menit untuk schedule
-  int MinEprOF1 = (EEPROM.read(4) * 60) + (EEPROM.read(5) + 0); //jam+menit stop dalam menit untuk schedule 
-  int MinEprON2 = (EEPROM.read(6) * 60) + (EEPROM.read(7) + 0); 
-  int MinEprOF2 = (EEPROM.read(8) * 60) + (EEPROM.read(9) + 0); 
-  int MinEprON3 = (EEPROM.read(10) * 60) + (EEPROM.read(11) + 0); 
-  int MinEprOF3 = (EEPROM.read(12) * 60) + (EEPROM.read(13) + 0); 
-  int MinEprON4 = (EEPROM.read(14) * 60) + (EEPROM.read(15) + 0); 
-  int MinEprOF4 = (EEPROM.read(16) * 60) + (EEPROM.read(17) + 0);   
+  int MinEprON1 = (EEPROM.read(2) * 60) + (EEPROM.read(3) - 1); //jam+menit start dalam menit untuk schedule
+  int MinEprOF1 = (EEPROM.read(4) * 60) + (EEPROM.read(5) - 1); //jam+menit stop dalam menit untuk schedule 
+  int MinEprON2 = (EEPROM.read(6) * 60) + (EEPROM.read(7) - 1); 
+  int MinEprOF2 = (EEPROM.read(8) * 60) + (EEPROM.read(9) - 1); 
+  int MinEprON3 = (EEPROM.read(10) * 60) + (EEPROM.read(11) - 1); 
+  int MinEprOF3 = (EEPROM.read(12) * 60) + (EEPROM.read(13) - 1); 
+  int MinEprON4 = (EEPROM.read(14) * 60) + (EEPROM.read(15) - 1); 
+  int MinEprOF4 = (EEPROM.read(16) * 60) + (EEPROM.read(17) - 1);   
 
   //misal start jam 09:00, stop jam 09:2, maka durasi 2 menit dijadikan detik (120) dan di bagi 4 (30) (untuk 4 schedule)
   int durationSunrise  = (((MinEprOF1 - MinEprON1) * 60) / 4 );  
@@ -694,7 +698,7 @@ Moon 23:00 1380
   Serial.print('\n');  
   
 */
-  delay(1000);
+  //delay(1000);
     
   if ((MinToday == MinEprON1) || (MinToday == MinEprON2) || (MinToday == MinEprON3) || (MinToday == MinEprON4)){
       Serial.println( "Starting Schedule in 1min...");
@@ -707,12 +711,13 @@ Moon 23:00 1380
       dimmer.setPower(sunriseA); // setPower(0-100%);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(0, 0); 
-      lcd.print("JAM ");
+      lcd.print("RUN ");
       lcd.setCursor(4, 0);
       // tampilkan jam:menit:detik di tengah
       displayTime();
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run SunriseA ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -722,18 +727,21 @@ Moon 23:00 1380
         USE_SERIAL.println(durationSunrise);
       } 
       //delayMicroseconds(durationSunrise);
-      USE_SERIAL.println(minutes);
+      //USE_SERIAL.println(minutes);
+      //delay(minutes); //for 60,000 milliseconds
       delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes);
       
       dimmer.setPower(sunriseB);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(0, 0); 
-      lcd.print("JAM ");
+      lcd.print("RUN ");
       lcd.setCursor(4, 0);
       // tampilkan jam:menit:detik di tengah
       displayTime();
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run SunriseB ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -743,13 +751,15 @@ Moon 23:00 1380
         USE_SERIAL.println(durationSunrise);
       } 
       //delayMicroseconds(durationSunrise);
-      USE_SERIAL.println(minutes);
+      //USE_SERIAL.println(minutes);
       delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes);
       
       dimmer.setPower(sunriseC);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run SunriseC ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -759,18 +769,20 @@ Moon 23:00 1380
         USE_SERIAL.println(durationSunrise);
       } 
       //delayMicroseconds(durationSunrise);
-      USE_SERIAL.println(minutes);
+      //USE_SERIAL.println(minutes);
       delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes);
 
       dimmer.setPower(sunriseD);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(0, 0); 
-      lcd.print("JAM ");
+      lcd.print("RUN ");
       lcd.setCursor(4, 0);
       // tampilkan jam:menit:detik di tengah
       displayTime();
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run SunriseD ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -780,8 +792,9 @@ Moon 23:00 1380
         USE_SERIAL.println(durationSunrise);
       }
       //delayMicroseconds(durationSunrise);
-      USE_SERIAL.println(minutes);
+      //USE_SERIAL.println(minutes);
       delay(minutes); //for 60,000 milliseconds 
+      //singleDelay.start(minutes);
     }
     /// Sunlight
     else if ((MinToday >= MinEprON2) && (MinToday < MinEprOF2 )) {
@@ -791,12 +804,13 @@ Moon 23:00 1380
       dimmer.setPower(sunlightA); // setPower(0-100%);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(0, 0); 
-      lcd.print("JAM ");
+      lcd.print("RUN ");
       lcd.setCursor(4, 0);
       // tampilkan jam:menit:detik di tengah
       displayTime();
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run SunlightA ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -806,13 +820,15 @@ Moon 23:00 1380
         USE_SERIAL.println(durationSunlight);
       } 
       //delayMicroseconds(durationSunLight);
-      USE_SERIAL.println(minutes);
+      //USE_SERIAL.println(minutes);
       delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes);
       
       dimmer.setPower(sunlightB);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run SunlightB ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -822,18 +838,20 @@ Moon 23:00 1380
         USE_SERIAL.println(durationSunlight);
       } 
       //delayMicroseconds(durationSunlight);
-      USE_SERIAL.println(minutes);
+      //USE_SERIAL.println(minutes);
       delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes);
       
       dimmer.setPower(sunlightC);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(0, 0); 
-      lcd.print("JAM ");
+      lcd.print("RUN ");
       lcd.setCursor(4, 0);
       // tampilkan jam:menit:detik di tengah
       displayTime();
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run SunlightC ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -843,18 +861,20 @@ Moon 23:00 1380
         USE_SERIAL.println(durationSunlight);
       } 
       //delayMicroseconds(durationSunlight);
-      USE_SERIAL.println(minutes);
+      //USE_SERIAL.println(minutes);
       delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes);
 
       dimmer.setPower(sunlightD);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(0, 0); 
-      lcd.print("JAM ");
+      lcd.print("RUN ");
       lcd.setCursor(4, 0);
       // tampilkan jam:menit:detik di tengah
       displayTime();
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run SunlightD ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -864,8 +884,9 @@ Moon 23:00 1380
         USE_SERIAL.println(durationSunlight);
       }
       //delayMicroseconds(durationSunlight);
-      USE_SERIAL.println(minutes);
-      delay(minutes); //for 60,000 milliseconds 
+      //USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes); 
     }
     /// Sunset
     else if ((MinToday >= MinEprON3) && (MinToday < MinEprOF3 )) {
@@ -875,12 +896,13 @@ Moon 23:00 1380
       dimmer.setPower(sunsetA); // setPower(0-100%);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(0, 0); 
-      lcd.print("JAM ");
+      lcd.print("RUN ");
       lcd.setCursor(4, 0);
       // tampilkan jam:menit:detik di tengah
       displayTime();
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run SunsetA ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -890,18 +912,20 @@ Moon 23:00 1380
         USE_SERIAL.println(durationSunset);
       } 
       //delayMicroseconds(durationSunset);
-      USE_SERIAL.println(minutes);
+      //USE_SERIAL.println(minutes);
       delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes);
       
       dimmer.setPower(sunsetB);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(0, 0); 
-      lcd.print("JAM ");
+      lcd.print("RUN ");
       lcd.setCursor(4, 0);
       // tampilkan jam:menit:detik di tengah
       displayTime();
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run SunsetB ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -911,18 +935,20 @@ Moon 23:00 1380
         USE_SERIAL.println(durationSunset);
       } 
       //delayMicroseconds(durationSunset);
-      USE_SERIAL.println(minutes);
+      //USE_SERIAL.println(minutes);
       delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes);
       
       dimmer.setPower(sunsetC);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(0, 0); 
-      lcd.print("JAM ");
+      lcd.print("RUN ");
       lcd.setCursor(4, 0);
       // tampilkan jam:menit:detik di tengah
       displayTime();
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run SunsetC ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -932,18 +958,20 @@ Moon 23:00 1380
         USE_SERIAL.println(durationSunset);
       } 
       //delayMicroseconds(durationSunset);
-      USE_SERIAL.println(minutes);
+      //USE_SERIAL.println(minutes);
       delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes);
 
       dimmer.setPower(sunriseD);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(0, 0); 
-      lcd.print("JAM ");
+      lcd.print("RUN ");
       lcd.setCursor(4, 0);
       // tampilkan jam:menit:detik di tengah
       displayTime();
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run SunsetD ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -953,8 +981,9 @@ Moon 23:00 1380
         USE_SERIAL.println(durationSunset);
       }
       //delayMicroseconds(durationSunset);
-      USE_SERIAL.println(minutes);
-      delay(minutes); //for 60,000 milliseconds 
+      //USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes);
     }
     /// Moontime
     else if ((MinToday >= MinEprON4) && (MinToday < MinEprOF4 )) {
@@ -964,12 +993,13 @@ Moon 23:00 1380
       dimmer.setPower(moontimeA); // setPower(0-100%);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(0, 0); 
-      lcd.print("JAM ");
+      lcd.print("RUN ");
       lcd.setCursor(4, 0);
       // tampilkan jam:menit:detik di tengah
       displayTime();
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run MoontimeA ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -979,18 +1009,20 @@ Moon 23:00 1380
         USE_SERIAL.println(durationMoontime);
       } 
       //delayMicroseconds(durationMoontime);
-      USE_SERIAL.println(minutes);
+      //USE_SERIAL.println(minutes);
       delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes);
       
       dimmer.setPower(moontimeB);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(0, 0); 
-      lcd.print("JAM ");
+      lcd.print("RUN ");
       lcd.setCursor(4, 0);
       // tampilkan jam:menit:detik di tengah
       displayTime();
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run MoontimeB ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -1000,18 +1032,20 @@ Moon 23:00 1380
         USE_SERIAL.println(durationMoontime);
       } 
       //delayMicroseconds(durationMoontime);
-      USE_SERIAL.println(minutes);
+      //USE_SERIAL.println(minutes);
       delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes);
       
       dimmer.setPower(moontimeC);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(0, 0); 
-      lcd.print("JAM ");
+      lcd.print("RUN ");
       lcd.setCursor(4, 0);
       // tampilkan jam:menit:detik di tengah
       displayTime();
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run MoontimeC ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -1021,18 +1055,20 @@ Moon 23:00 1380
         USE_SERIAL.println(durationMoontime);
       } 
       //delayMicroseconds(durationMoontime);
-      USE_SERIAL.println(minutes);
+      //USE_SERIAL.println(minutes);
       delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes);
 
       dimmer.setPower(moontimeD);
       // tampilkan intensitas yang berjalan
       lcd.setCursor(0, 0); 
-      lcd.print("JAM ");
+      lcd.print("RUN ");
       lcd.setCursor(4, 0);
       // tampilkan jam:menit:detik di tengah
       displayTime();
       lcd.setCursor(13, 0); 
       lcd.print(dimmer.getPower());
+      lcd.print("%");
       Serial.print( "- Run MoontimeD ");
       {
         USE_SERIAL.print("+ Intens:");
@@ -1042,10 +1078,12 @@ Moon 23:00 1380
         USE_SERIAL.println(durationMoontime);
       }
       //delayMicroseconds(durationMoontime);
-      USE_SERIAL.println(minutes);
-      delay(minutes); //for 60,000 milliseconds 
-
+      //USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+      //singleDelay.start(minutes);
+      
       //delay(500);
+      //singleDelay.start(minutes);
     }
     else 
     {  
@@ -1057,7 +1095,7 @@ Moon 23:00 1380
         USE_SERIAL.print(dimmer.getPower());
         USE_SERIAL.println("%");
       } 
-      delay(500);
+      //delay(500);
     }
   }
 
