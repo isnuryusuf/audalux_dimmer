@@ -34,5 +34,5 @@ Bahan-bahan:
 
 
 - Referensi
-[1] https://www.youtube.com/watch?v=BhQWOv10Oag
-[2] https://circuitdigest.com/microcontroller-projects/ac-phase-angle-control-for-light-dimmers-and-motor-speed-control-using-555-timer-and-pwm-control
+  - [1] https://www.youtube.com/watch?v=BhQWOv10Oag
+  - [2] https://circuitdigest.com/microcontroller-projects/ac-phase-angle-control-for-light-dimmers-and-motor-speed-control-using-555-timer-and-pwm-control
