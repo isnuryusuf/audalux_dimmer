@@ -24,3 +24,9 @@ Features:
   - Persentasi schedule yang berjalan
   - Jam
   
+Bahan-bahan:
+- Arduino Uno
+- LCD Keypad Shield 16x2
+- RTC DS1302
+- 220v to 9v Power Switching
+- Robodyn AC Dimmer
