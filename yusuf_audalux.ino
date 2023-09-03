@@ -652,15 +652,6 @@ Moon 23:00 1380
   int durationSunset   = (((MinEprOF3 - MinEprON3) * 60) / 4 );
   int durationMoontime = (((MinEprOF4 - MinEprON4) * 60) / 4 );
 
-  
-/*
-USE_SERIAL.println(MinEprOF1);
-USE_SERIAL.println(MinEprON1);
-USE_SERIAL.println(MinEprOF1 - MinEprON1);
-USE_SERIAL.println((MinEprOF1 - MinEprON1) * 60 );
-USE_SERIAL.println((((MinEprOF1 - MinEprON1) * 60 ) / 4) * 1000);
-*/
-
   int sunriseA = EEPROM.read(102);
   int sunriseB = EEPROM.read(103);
   int sunriseC = EEPROM.read(104);
@@ -677,9 +668,9 @@ USE_SERIAL.println((((MinEprOF1 - MinEprON1) * 60 ) / 4) * 1000);
   int moontimeB = EEPROM.read(115);
   int moontimeC = EEPROM.read(116);
   int moontimeD = EEPROM.read(117);
-  
 
 /*
+  // Debug only
   String p1=" ";
   String p2=">/=";
   String p3="<";
@@ -698,15 +689,9 @@ USE_SERIAL.println((((MinEprOF1 - MinEprON1) * 60 ) / 4) * 1000);
   Serial.print("moon: ");
   Serial.println(p4 + p1 + MinToday + p1 + p2 + p1 + MinEprON4 + p1 + p5 + p1 + MinToday + p1 + p3 + p1 + MinEprOF4 + p1 + p6);
   Serial.print('\n');  
+  
 */
-delay(500);
-    /*  Serial.print(myRTC.hours);
-      Serial.print(":");
-      Serial.print(myRTC.minutes);
-      Serial.print(":");
-      Serial.print(myRTC.seconds);
-      Serial.print(" | ");
-       */
+  delay(500);
   if (MinToday == MinEprON1) {
       Serial.println( "Starting Schedule in 1min.. ");
   }
@@ -1001,5 +986,3 @@ delay(500);
       delay(500);
     }
   }
-
-
