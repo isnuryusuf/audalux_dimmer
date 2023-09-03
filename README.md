@@ -2,6 +2,10 @@
 # Work In Progress - WIP
 # DISSCLAIMER: Use Your Own Risk!!!
 
+![Uploading image.png…]()
+
+
+
 Features:
 - Setting Jam dan reminder Jam (jam tidak ter-reset kalo mati)
 - Setting Schedule
@@ -26,6 +30,7 @@ Features:
   - Jam
   
 Bahan-bahan:
+- [Audalux LED](https://www.tokopedia.com/tj168/lampu-sorot-lampu-hias-ikan-laut-lampu-coral-biru-50-w-kabel-2-m)
 - [Arduino Uno](https://pages.github.com](https://www.tokopedia.com/rajacell/arduinoo-uno-r3-smd-high-quality-atmega328-ch340g-5v-16mhz-dev-board-uno-r3-board)/)
 - [LCD Keypad Shield 16x2](https://www.tokopedia.com/rajacell/lcd-keypad-shield-arduino-uno-mega-1602-blue-kualitas-no1)
 - [RTC DS1302](https://www.tokopedia.com/rajacell/rtc-ds1302-battery-cr3032-real-time-clock-module-for-arduinoo)
