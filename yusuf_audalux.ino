@@ -2,9 +2,6 @@
 #include "LiquidCrystal.h"
 #include <EEPROM.h>
 #include <virtuabotixRTC.h>
-//#include "RTClib.h"
-
-//#define USE_SERIAL  SerialUSB
 #define USE_SERIAL  Serial
 #define outputPin  3
 #define zerocross  2 // for boards with CHANGEBLE input pins
@@ -20,22 +17,6 @@ int adc_key_in  = 0;
 dimmerLamp dimmer(outputPin); //initialase port for dimmer for MEGA, Leonardo, UNO, Arduino M0, Arduino Zero
 
 int outVal = 0;
-int SunRi1;
-int SunRi2;
-int SunRi3;
-int SunRi4;
-int SunLi1;
-int SunLi2;
-int SunLi3;
-int SunLi4;
-int SunSe1;
-int SunSe2;
-int SunSe3;
-int SunSe4;
-int MoonTi1;
-int MoonTi2;
-int MoonTi3;
-int MoonTi4;
 
 // relay pins
 #define relay1      2
@@ -102,7 +83,7 @@ int eepromMinOF2 = 0;
 int testDimmer = 0;
 
 /* ================================================== */
-/* SETUP                                  */
+/* BEGIN SETUP                                        */
 /* ================================================== */
 void setup() {
   // jadikan semua digital pin sbg output
@@ -119,38 +100,6 @@ void setup() {
   digitalWrite(rtcVCC, HIGH);
   digitalWrite(rtcGND, LOW);
   delay(500);
-
-  /*
-  //moontime
-  EEPROM.write(100, 24);
-  //sunrise
-  EEPROM.write(101, 26);
-  EEPROM.write(102, 28);
-  EEPROM.write(103, 30);
-  EEPROM.write(104, 32);
-  EEPROM.write(105, 34);
-  EEPROM.write(106, 36);
-  EEPROM.write(107, 38);
-  EEPROM.write(108, 40);
-  EEPROM.write(109, 42);
-  EEPROM.write(110, 46);
-  EEPROM.write(111, 58);
-  //sunlight
-  EEPROM.write(201, 64);
-  EEPROM.write(202, 84);
-  //sunset
-  EEPROM.write(301, 26);
-  EEPROM.write(302, 28);
-  EEPROM.write(303, 30);
-  EEPROM.write(304, 32);
-  EEPROM.write(305, 34);
-  EEPROM.write(306, 36);
-  EEPROM.write(307, 38);
-  EEPROM.write(308, 40);
-  EEPROM.write(309, 42);
-  EEPROM.write(310, 46);
-  EEPROM.write(311, 58);
-  */
 
   //debuging mode
   USE_SERIAL.begin(9600); 
@@ -172,12 +121,10 @@ void printSpace(int val)
 /* END SETUP                                          */
 /* ================================================== */
 
-
 /* ================================================== */
-/* LOOP                                               */
+/* BEGIN LOOP                                         */
 /* ================================================== */
 void loop() {
-
   lcd.setCursor(0, 0); 
   lcd.print("JAM ");
   lcd.setCursor(4, 0);
@@ -249,6 +196,7 @@ void loop() {
     if (read_LCD_buttons() == btnUP) {
       while (read_LCD_buttons() == btnUP);
       lcd.clear();
+      //runSchedule();
     }
     else if (read_LCD_buttons() == btnDOWN) {
       while (read_LCD_buttons() == btnDOWN);
@@ -261,6 +209,13 @@ void loop() {
   }
 }
 
+/* ================================================== */
+/* END LOOP                                           */
+/* ================================================== */
+
+/* ================================================== */
+/* SETUP Functions                                    */
+/* ================================================== */
 // check schedule dan action
 void relayAction(int adrON, int adrOF, int pos, int pin) {
  
@@ -270,23 +225,6 @@ void relayAction(int adrON, int adrOF, int pos, int pin) {
   int MinEprON = (EEPROM.read(adrON) * 60) + EEPROM.read(adrON + 1); //jam+menit start dalam menit untuk semua schedule
   int MinEprOF = (EEPROM.read(adrOF) * 60) + EEPROM.read(adrOF + 1); //jam+menit stop dalam menit untuk semua schedule
 
-  //cuma buat debug
-  /*
-  Serial.print(now.hour());
-  Serial.print('\n');
-  Serial.print(now.minute());
-  Serial.print('\n');
-  Serial.print(MinToday);
-  delay(1000);
-  Serial.print('\n');
-  Serial.print(MinEprON);
-  delay(1000);
-  Serial.print('\n');
-  Serial.print(MinEprOF);
-  delay(1000);
-  Serial.print('\n');
-  */
-  
   lcd.setCursor(pos, 1);
   if (MinEprON == MinEprOF) {  // jika start-stop sama berarti tidak dipake
     lcd.print(" "); //tidak ada schedule di set
@@ -296,54 +234,26 @@ void relayAction(int adrON, int adrOF, int pos, int pin) {
   else if (MinEprON < MinEprOF) { // kondisi ON terjadi di hari yg sama, contoh start 01:00, stop 02:00
     if ((MinEprON <= MinToday) && (MinEprOF > MinToday)) {
       lcd.print("*");
-      //digitalWrite(pin, LOW);
-      dimmer.setPower(20);
-     }
-    else {
-      lcd.print("+");
-      //digitalWrite(pin, HIGH);
-      //sunRiseValue();
-      //sunLightValue();
-      //sunSetValue();
-      moonLightValue();
-      //testDimmer = EEPROM.read(adr4ON2);
-      //dimmer.setPower(testDimmer);
-      //dimmer.setPower(84);
-      int durationSched = (MinEprON * 3600) - (MinEprOF * 3600);
-      //Serial.print('durationSched');
-      //Serial.print('\n');
-      //Serial.print(MinEprON);
-      //Serial.print('\n');
-      //Serial.print(MinEprOF);
-      //Serial.print('\n');
-      //delay(durationSched);
-      //delay(1000); 
-      
+      runSchedule();
      }
   }
   else if (MinEprON > MinEprOF) {  // kondisi ON terjadi sampai besoknya
     if ((MinEprON >= MinToday) || (MinEprOF < MinToday)) {
-      lcd.print("b");
+      lcd.print("+");
+      runSchedule();
       //digitalWrite(pin, LOW);
-      dimmer.setPower(40);
+      //dimmer.setPower(40);
     }
     else {
       lcd.print("-");
+      runSchedule();
       //digitalWrite(pin, HIGH);
-      dimmer.setPower(50);
+      //dimmer.setPower(50);
     }
   }
 }
-/* ================================================== */
-/* END LOOP                                    */
-/* ================================================== */
-
-/* ================================================== */
-/* SETUP Functions                                    */
-/* ================================================== */
 
 void setRTC() {
-
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("TIME SETTING");
@@ -367,10 +277,6 @@ void setRTC() {
   delay(1000);
   lcd.clear();
 }
-/* ================================================== */
-/* END LOOP                                           */
-/* ================================================== */
-
 
 void setPin() {
   lcd.clear();
@@ -618,7 +524,6 @@ void setupChooseValue2(int HourNew2, int MinNew2, byte Address2, byte Pos) {
   delay(150);
 }
 
-
 void setupChooseValueSetRTC(int HourNew, int MinNew, byte Pos) {
   while (read_LCD_buttons() != btnSELECT) {
     if (read_LCD_buttons() == btnRIGHT) {
@@ -669,7 +574,6 @@ void setupShowValue2(int Hour, int Min, int Pos) {
 int read_LCD_buttons()
 {
   adc_key_in = analogRead(0);       // read the value from the LCD
-
   if (adc_key_in > 1000) return btnNONE; 
   if (adc_key_in < 50)   return btnRIGHT;  
   if (adc_key_in < 150)  return btnUP; 
@@ -682,7 +586,6 @@ int read_LCD_buttons()
 void eeprom_write_int(int p_address, int p_value) {
   byte lowByte = ((p_value >> 0) & 0xFF);
   byte highByte = ((p_value >> 8) & 0xFF);
-
   EEPROM.write(p_address, lowByte);
   EEPROM.write(p_address + 1, highByte);
 }
@@ -690,7 +593,6 @@ void eeprom_write_int(int p_address, int p_value) {
 void eeprom_write_int2(int p_address2, int p_value2) {
   byte lowByte = ((p_value2 >> 0) & 0xFF);
   byte highByte = ((p_value2 >> 8) & 0xFF);
-
   EEPROM.write(p_address2, lowByte);
   EEPROM.write(p_address2 + 1, highByte);
 }
@@ -698,19 +600,16 @@ void eeprom_write_int2(int p_address2, int p_value2) {
 unsigned int eeprom_read_int(int p_address) {
   byte lowByte = EEPROM.read(p_address);
   byte highByte = EEPROM.read(p_address + 1);
-
   return ((lowByte << 0) & 0xFF) + ((highByte << 8) & 0xFF00);
 }
 
 unsigned int eeprom_read_int2(int p_address2) {
   byte lowByte = EEPROM.read(p_address2);
   byte highByte = EEPROM.read(p_address2 + 1);
-
   return ((lowByte << 0) & 0xFF) + ((highByte << 8) & 0xFF00);
 }
 
 void displayTime() {
-
   myRTC.updateTime();
   print2digits(myRTC.hours);
   lcd.print(":");
@@ -725,96 +624,443 @@ void print2digits(int number) {
   lcd.print(number, DEC);
 }
 
-
-void sunRiseValue() {
-/////////////////////////////////////////////////////
-  SunRi1 = EEPROM.read(101);
-  dimmer.setPower(SunRi1); // setPower(0-100%);
-
-  {
-    USE_SERIAL.print("lampValue -> ");
-    printSpace(dimmer.getPower());
-    USE_SERIAL.print(dimmer.getPower());
-    USE_SERIAL.println("%");
-  }
+void runSchedule() {
   /*
-  lcd.setCursor(0, 0);
-  lcd.print("Audalux Sunrise ");
+Sunrise 09:00 540
+Sunrise 10:00  600
+Sunlight 10:00 600
+Sunlight 17:00 1020
+Sunset 17:00 1020
+Sunset  20:00 1200
+Moon 20:00 1200
+Moon 23:00 1380
+   */
+  myRTC.updateTime();
+  int MinToday = (myRTC.hours * 60) + myRTC.minutes; //jam sekarang jadi total menit
+  //int MinToday = 1381;
+  int MinEprON1 = (EEPROM.read(2) * 60) + (EEPROM.read(3) + 0); //jam+menit start dalam menit untuk schedule
+  int MinEprOF1 = (EEPROM.read(4) * 60) + (EEPROM.read(5) + 0); //jam+menit stop dalam menit untuk schedule 
+  int MinEprON2 = (EEPROM.read(6) * 60) + (EEPROM.read(7) + 0); 
+  int MinEprOF2 = (EEPROM.read(8) * 60) + (EEPROM.read(9) + 0); 
+  int MinEprON3 = (EEPROM.read(10) * 60) + (EEPROM.read(11) + 0); 
+  int MinEprOF3 = (EEPROM.read(12) * 60) + (EEPROM.read(13) + 0); 
+  int MinEprON4 = (EEPROM.read(14) * 60) + (EEPROM.read(15) + 0); 
+  int MinEprOF4 = (EEPROM.read(16) * 60) + (EEPROM.read(17) + 0);   
+  
+  int durationSunrise  = (((MinEprOF1 - MinEprON1) * 60) / 4 );
+  int durationSunlight = (((MinEprOF2 - MinEprON2) * 60) / 4 );
+  int durationSunset   = (((MinEprOF3 - MinEprON3) * 60) / 4 );
+  int durationMoontime = (((MinEprOF4 - MinEprON4) * 60) / 4 );
 
-  lcd.setCursor(0, 1);
-  lcd.print("Setting: ");
-  lcd.print(dimmer.getPower());
-  if (outVal <= 9) {
-    lcd.print("  ");
-  } else if (outVal >= 10 && outVal <= 99) {
-    lcd.print(" ");
+  
+/*
+USE_SERIAL.println(MinEprOF1);
+USE_SERIAL.println(MinEprON1);
+USE_SERIAL.println(MinEprOF1 - MinEprON1);
+USE_SERIAL.println((MinEprOF1 - MinEprON1) * 60 );
+USE_SERIAL.println((((MinEprOF1 - MinEprON1) * 60 ) / 4) * 1000);
+*/
+
+  int sunriseA = EEPROM.read(102);
+  int sunriseB = EEPROM.read(103);
+  int sunriseC = EEPROM.read(104);
+  int sunriseD = EEPROM.read(105);
+  int sunlightA = EEPROM.read(106);
+  int sunlightB = EEPROM.read(107);
+  int sunlightC = EEPROM.read(108);
+  int sunlightD = EEPROM.read(109);
+  int sunsetA = EEPROM.read(110);
+  int sunsetB = EEPROM.read(111);
+  int sunsetC = EEPROM.read(112);
+  int sunsetD = EEPROM.read(113);
+  int moontimeA = EEPROM.read(114);
+  int moontimeB = EEPROM.read(115);
+  int moontimeC = EEPROM.read(116);
+  int moontimeD = EEPROM.read(117);
+  
+
+/*
+  String p1=" ";
+  String p2=">/=";
+  String p3="<";
+  String p4="jika";
+  String p5="dan";
+  String p6="= benar semua";
+  Serial.print("Sunset: ");
+  Serial.println(p4 + p1 + MinToday + p1 + p2 + p1 + MinEprON1 + p1 + p5 + p1 + MinToday + p1 + p3 + p1 + MinEprOF1 + p1 + p6);
+  //Serial.print('\n');
+  Serial.print("Sunlight: ");
+  Serial.println(p4 + p1 + MinToday + p1 + p2 + p1 + MinEprON2 + p1 + p5 + p1 + MinToday + p1 + p3 + p1 + MinEprOF2 + p1 + p6);
+  //Serial.print('\n');
+  Serial.print("Sunrise: ");
+  Serial.println(p4 + p1 + MinToday + p1 + p2 + p1 + MinEprON3 + p1 + p5 + p1 + MinToday + p1 + p3 + p1 + MinEprOF3 + p1 + p6);
+ //Serial.print('\n');
+  Serial.print("moon: ");
+  Serial.println(p4 + p1 + MinToday + p1 + p2 + p1 + MinEprON4 + p1 + p5 + p1 + MinToday + p1 + p3 + p1 + MinEprOF4 + p1 + p6);
+  Serial.print('\n');  
+*/
+delay(500);
+    /*  Serial.print(myRTC.hours);
+      Serial.print(":");
+      Serial.print(myRTC.minutes);
+      Serial.print(":");
+      Serial.print(myRTC.seconds);
+      Serial.print(" | ");
+       */
+  if (MinToday == MinEprON1) {
+      Serial.println( "Starting Schedule in 1min.. ");
   }
-  lcd.print(" %");
-  */
-  //delay(500);
-}
+  /// Sunrise
+  else if ((MinToday >= MinEprON1) && (MinToday < MinEprOF1 )) {
+      //Serial.print( "- Run Sunrise ");
+      unsigned long seconds = 1000L; //Notice the L 
+      unsigned long minutes = seconds * durationSunrise;
+      dimmer.setPower(sunriseA); // setPower(0-100%);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run SunriseA ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationSunrise);
+      } 
+      //delayMicroseconds(durationSunrise);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+      
+      dimmer.setPower(sunriseB);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run SunriseB ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationSunrise);
+      } 
+      //delayMicroseconds(durationSunrise);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+      
+      dimmer.setPower(sunriseC);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run SunriseC ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationSunrise);
+      } 
+      //delayMicroseconds(durationSunrise);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+
+      dimmer.setPower(sunriseD);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run SunriseD ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationSunrise);
+      }
+      //delayMicroseconds(durationSunrise);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds 
+    }
+    /// Sunlight
+    else if ((MinToday >= MinEprON2) && (MinToday < MinEprOF2 )) {
+      //Serial.print( "- Run Sunlight ");
+      unsigned long seconds = 1000L; //Notice the L 
+      unsigned long minutes = seconds * durationSunlight;
+      dimmer.setPower(sunlightA); // setPower(0-100%);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run SunlightA ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationSunlight);
+      } 
+      //delayMicroseconds(durationSunLight);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+      
+      dimmer.setPower(sunlightB);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run SunlightB ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationSunlight);
+      } 
+      //delayMicroseconds(durationSunlight);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+      
+      dimmer.setPower(sunlightC);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run SunlightC ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationSunlight);
+      } 
+      //delayMicroseconds(durationSunlight);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+
+      dimmer.setPower(sunlightD);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run SunlightD ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationSunlight);
+      }
+      //delayMicroseconds(durationSunlight);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds 
+    }
+    /// Sunset
+    else if ((MinToday >= MinEprON3) && (MinToday < MinEprOF3 )) {
+      //Serial.print( "- Run Sunset ");
+      unsigned long seconds = 1000L; //Notice the L 
+      unsigned long minutes = seconds * durationSunset;
+      dimmer.setPower(sunsetA); // setPower(0-100%);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run SunsetA ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationSunset);
+      } 
+      //delayMicroseconds(durationSunset);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+      
+      dimmer.setPower(sunsetB);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run SunsetB ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationSunset);
+      } 
+      //delayMicroseconds(durationSunset);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+      
+      dimmer.setPower(sunsetC);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run SunsetC ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationSunset);
+      } 
+      //delayMicroseconds(durationSunset);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+
+      dimmer.setPower(sunriseD);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run SunsetD ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationSunset);
+      }
+      //delayMicroseconds(durationSunset);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds 
+    }
+    /// Moontime
+    else if ((MinToday >= MinEprON4) && (MinToday < MinEprOF4 )) {
+      //Serial.print( "- Run Moontime ");
+      unsigned long seconds = 1000L; //Notice the L 
+      unsigned long minutes = seconds * durationMoontime;
+      dimmer.setPower(moontimeA); // setPower(0-100%);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run MoontimeA ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationMoontime);
+      } 
+      //delayMicroseconds(durationMoontime);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+      
+      dimmer.setPower(moontimeB);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run MoontimeB ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationMoontime);
+      } 
+      //delayMicroseconds(durationMoontime);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+      
+      dimmer.setPower(moontimeC);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run MoontimeC ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationMoontime);
+      } 
+      //delayMicroseconds(durationMoontime);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds
+
+      dimmer.setPower(moontimeD);
+      // tampilkan intensitas yang berjalan
+      lcd.setCursor(13, 0); 
+      lcd.print(dimmer.getPower());
+      Serial.print( "- Run MoontimeD ");
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.print("% + Delay: ");
+        USE_SERIAL.println(durationMoontime);
+      }
+      //delayMicroseconds(durationMoontime);
+      USE_SERIAL.println(minutes);
+      delay(minutes); //for 60,000 milliseconds 
+
+      delay(500);
+    }
+    else
+    {  
+      Serial.println( "- No Schedule " );
+      dimmer.setPower(0); // setPower(0-100%);
+      {
+        USE_SERIAL.print("+ Intens:");
+        printSpace(dimmer.getPower());
+        USE_SERIAL.print(dimmer.getPower());
+        USE_SERIAL.println("%");
+      } 
+      delay(500);
+    }
+  }
 
 
-void sunLightValue() {
-/////////////////////////////////////////////////////
-  dimmer.setPower(84); // setPower(0-100%);
 
+
+/*
+
+  if ((((EEPROM.read(2) * 60) + EEPROM.read(3 + 1)) >= MinToday) && (((EEPROM.read(4) * 60) + EEPROM.read(5 + 1)) >= MinToday))
+  //                  (540 + 1) > 580 && (600 + 1) > 580
   {
-    USE_SERIAL.print("lampValue -> ");
-    printSpace(dimmer.getPower());
-    USE_SERIAL.print(dimmer.getPower());
-    USE_SERIAL.println("%");
+    Serial.println( " Run Sunrise ");
 
+    //sunRiseValue();
+    dimmer.setPower(24); // setPower(0-100%);
+    {
+      USE_SERIAL.print("lampValue -> ");
+      printSpace(dimmer.getPower());
+      USE_SERIAL.print(dimmer.getPower());
+      USE_SERIAL.println("%");
+    } 
+  }  
+  else if ((((EEPROM.read(6) * 60) + EEPROM.read(7 + 1)) >= MinToday) && (((EEPROM.read(8) * 60) + EEPROM.read(9 + 1)) >= MinToday))
+  {  
+    Serial.println( " Run Sunlight " );
+    //sunLightValue();
+    dimmer.setPower(64); // setPower(0-100%);
+    {
+      USE_SERIAL.print("lampValue -> ");
+      printSpace(dimmer.getPower());
+      USE_SERIAL.print(dimmer.getPower());
+      USE_SERIAL.println("%");
+    }
+  }  
+  else if ((((EEPROM.read(10) * 60) + EEPROM.read(11 + 1)) >= MinToday) && (((EEPROM.read(12) * 60) + EEPROM.read(13 + 1)) >= MinToday))
+  {  
+    Serial.println( " Run Sunset " );
+    //sunSetValue();
+    dimmer.setPower(26); // setPower(0-100%);
+    {
+      USE_SERIAL.print("lampValue -> ");
+      printSpace(dimmer.getPower());
+      USE_SERIAL.print(dimmer.getPower());
+      USE_SERIAL.println("%");
+    }
   }
-  /*
-  lcd.setCursor(0, 0);
-  lcd.print("Audalux Sunlight");
-
-  lcd.setCursor(0, 1);
-  lcd.print("Setting: ");
-  lcd.print(dimmer.getPower());
-  if (outVal <= 9) {
-    lcd.print("  ");
-  } else if (outVal >= 10 && outVal <= 99) {
-    lcd.print(" ");
+  else if ((((EEPROM.read(14) * 60) + EEPROM.read(15 + 1)) >= MinToday) && (((EEPROM.read(16) * 60) + EEPROM.read(17 + 1)) >= MinToday))
+  {  
+    Serial.println( " Run Moon " );
+    //moonLightValue();
+    //MoonTi1 = EEPROM.read(100);
+    dimmer.setPower(22); // setPower(0-100%);
+    {
+      USE_SERIAL.print("lampValue -> ");
+      printSpace(dimmer.getPower());
+      USE_SERIAL.print(dimmer.getPower());
+      USE_SERIAL.println("%");
+    }
   }
-  lcd.print(" %");
-  */
-  //delay(5000);
+  else
+  {  
+    Serial.println( " No Schedule " );
+  }
 }
-
-void sunSetValue() {
-/////////////////////////////////////////////////////
-  dimmer.setPower(46); // setPower(0-100%);
-
-  {
-    USE_SERIAL.print("lampValue -> ");
-    printSpace(dimmer.getPower());
-    USE_SERIAL.print(dimmer.getPower());
-    USE_SERIAL.println("%");
-  }
-  /*
-  lcd.setCursor(0, 0);
-  lcd.print("Audalux Sunset  ");
-
-  lcd.setCursor(0, 1);
-  lcd.print("Setting: ");
-  lcd.print(dimmer.getPower());
-  if (outVal <= 9) {
-    lcd.print("  ");
-  } else if (outVal >= 10 && outVal <= 99) {
-    lcd.print(" ");
-  }
-  lcd.print(" %");
-  */
-  //delay(1000);
-/////////////////////////////////////////////////////
-}
-
-void moonLightValue() {
-/////////////////////////////////////////////////////
-  MoonTi1 = EEPROM.read(100);
-  dimmer.setPower(MoonTi1); // setPower(0-100%);
-  //delay(500);
-/////////////////////////////////////////////////////
-}
+*/
