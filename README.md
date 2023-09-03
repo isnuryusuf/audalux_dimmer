@@ -6,8 +6,8 @@ Features:
 - Setting Schedule
   - Sunrise Start: Jam:Menit
   - Sunrise Stop: Jam:Menit
-  - Sungliht Start: Jam:Menit
-  - Sungliht Stop: Jam:Menit
+  - Sunglight Start: Jam:Menit
+  - Sunglight Stop: Jam:Menit
   - Sunset Start: Jam:Menit
   - Sunset Stop: Jam:Menit
   - Moontime Start: Jam:Menit
