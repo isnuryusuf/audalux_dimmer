@@ -1,6 +1,6 @@
 # audalux_dimmer
-Work In Progress - WIP
-DISSCLAIMER: Use Your Own Risk!!!
+# Work In Progress - WIP
+# DISSCLAIMER: Use Your Own Risk!!!
 
 Features:
 - Setting Jam dan reminder Jam (jam tidak ter-reset kalo mati)
