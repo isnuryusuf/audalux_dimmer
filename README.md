@@ -33,6 +33,6 @@ Bahan-bahan:
 - [Robodyn AC Dimmer](https://www.tokopedia.com/kyware/ac-light-dimmer-robotdyn-module-1-channel-220v-110v-logic-5v-3-3v)
 
 
-- Referensi
+Referensi
   - [1] https://www.youtube.com/watch?v=BhQWOv10Oag
   - [2] https://circuitdigest.com/microcontroller-projects/ac-phase-angle-control-for-light-dimmers-and-motor-speed-control-using-555-timer-and-pwm-control
