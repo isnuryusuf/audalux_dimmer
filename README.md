@@ -31,6 +31,8 @@ Features:
   - Jam
 - Example Schedule log
 ```
+00:58:41.929 -> - Run SunriseA + Intens: 26% + Delay: 30
+01:59:12.013 -> - Run SunriseB + Intens: 28% + Delay: 30
 00:59:41.929 -> - Run SunriseC + Intens: 26% + Delay: 30
 01:00:12.013 -> - Run SunriseD + Intens: 28% + Delay: 30
 01:00:42.098 -> - Run SunlightA + Intens: 36% + Delay: 30
