@@ -29,6 +29,23 @@ Features:
   - Status Schedule
   - Persentasi schedule yang berjalan
   - Jam
+- Example Schedule log
+```
+00:59:41.929 -> - Run SunriseC + Intens: 26% + Delay: 30
+01:00:12.013 -> - Run SunriseD + Intens: 28% + Delay: 30
+01:00:42.098 -> - Run SunlightA + Intens: 36% + Delay: 30
+01:01:12.062 -> - Run SunlightB + Intens: 48% + Delay: 30
+01:01:42.142 -> - Run SunlightC + Intens: 56% + Delay: 30
+01:02:12.151 -> - Run SunlightD + Intens: 64% + Delay: 30
+01:02:42.208 -> - Run SunsetA + Intens: 48% + Delay: 30
+01:03:12.276 -> - Run SunsetB + Intens: 36% + Delay: 30
+01:03:42.294 -> - Run SunsetC + Intens: 28% + Delay: 30
+01:04:12.377 -> - Run SunsetD + Intens: 28% + Delay: 30
+01:04:42.477 -> - Run MoontimeA + Intens: 24% + Delay: 30
+01:05:12.523 -> - Run MoontimeB + Intens: 22% + Delay: 30
+01:05:42.589 -> - Run MoontimeC + Intens: 20% + Delay: 30
+01:06:12.640 -> - Run MoontimeD + Intens: 18% + Delay: 30
+```
   
 Bahan-bahan:
 - [Audalux LED](https://www.tokopedia.com/tj168/lampu-sorot-lampu-hias-ikan-laut-lampu-coral-biru-50-w-kabel-2-m)
