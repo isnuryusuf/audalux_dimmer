@@ -5,13 +5,13 @@
 
 <img src="https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/ebcd8834-74fa-4541-93c9-def7004bf52f" width=40%>
 
-![image](https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/102e2a54-974a-401e-86f9-6e9bc1298642)
+<img src="https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/102e2a54-974a-401e-86f9-6e9bc1298642" width=40%>
 
-![image](https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/10edff56-1b4a-495d-8fae-05f7eedf6025)
+<img src="https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/10edff56-1b4a-495d-8fae-05f7eedf6025)" width=40%>
 
-![image](https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/4c9ecb7e-5fcb-40fb-b326-0215b342362b)
+<img src="https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/4c9ecb7e-5fcb-40fb-b326-0215b342362b" width=40%>
 
-![image](https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/c37b0997-68fb-4cd8-8dae-32a4faa88beb)
+<img src="https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/c37b0997-68fb-4cd8-8dae-32a4faa88beb" width=40%>
 
 
 
