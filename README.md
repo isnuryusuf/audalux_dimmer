@@ -15,7 +15,13 @@
 # Demo
 https://youtu.be/7hPapCJz-5I
 
-Features:
+# Diagram
+![image](https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/92906ee1-4650-4caf-9940-87114c25d6e8)
+![image](https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/18e036f5-117d-414d-958b-32275e55fb83)
+
+
+
+# Features:
 - Setting Jam dan reminder Jam (jam tidak ter-reset kalo mati)
 - Setting Schedule
   - Sunrise Start: jam:menit
