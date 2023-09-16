@@ -14,7 +14,7 @@
 
 # Demo
 
-[![Alt text](![image](https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/df1ef98f-bd5a-4b65-9c50-e0104337c5db))](https://youtu.be/7hPapCJz-5I)
+[Demo(https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/df1ef98f-bd5a-4b65-9c50-e0104337c5db](https://youtu.be/7hPapCJz-5I)
 
 
 # Diagram
