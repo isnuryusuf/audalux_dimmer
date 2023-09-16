@@ -13,7 +13,9 @@
 <img src="https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/c37b0997-68fb-4cd8-8dae-32a4faa88beb" width=30%>
 
 # Demo
-https://youtu.be/7hPapCJz-5I
+
+[![Alt text]()](https://youtu.be/7hPapCJz-5I)
+<iframe width="1280" height="747" src="https://www.youtube.com/embed/7hPapCJz-5I" title="Audalux Dimmer Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 # Diagram
 
