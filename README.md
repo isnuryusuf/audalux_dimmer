@@ -17,8 +17,11 @@
 
 
 [![Watch Demo video](https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/df1ef98f-bd5a-4b65-9c50-e0104337c5db)](https://youtu.be/7hPapCJz-5I)
-[![Alt text](https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/df1ef98f-bd5a-4b65-9c50-e0104337c5db)](https://youtu.be/7hPapCJz-5I)
 
+[![Watch the video](https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/df1ef98f-bd5a-4b65-9c50-e0104337c5db)](https://www.youtube.com/embed/APOPm01BVrk)
+
+[<img src="https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/df1ef98f-bd5a-4b65-9c50-e0104337c5db" width="600" height="300"
+/>](https://www.youtube.com/embed/APOPm01BVrk)
 
 
 
