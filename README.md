@@ -2,7 +2,7 @@
 # Work In Progress - WIP
 # DISSCLAIMER: Use Your Own Risk!!!
 
-
+# Foto Sample Prototype
 <img src="https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/ebcd8834-74fa-4541-93c9-def7004bf52f" width=40%>
 
 <img src="https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/102e2a54-974a-401e-86f9-6e9bc1298642" width=30%>
@@ -13,7 +13,8 @@
 
 <img src="https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/c37b0997-68fb-4cd8-8dae-32a4faa88beb" width=30%>
 
-
+# Demo
+https://youtu.be/7hPapCJz-5I
 
 Features:
 - Setting Jam dan reminder Jam (jam tidak ter-reset kalo mati)
