@@ -1,5 +1,4 @@
-# audalux_dimmer
-# Work In Progress - WIP
+# audalux_dimmer - Work In Progress - WIP
 # DISSCLAIMER: Use Your Own Risk!!!
 
 # Foto Sample Prototype
