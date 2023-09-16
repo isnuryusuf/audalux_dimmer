@@ -70,6 +70,9 @@ Bahan-bahan:
 - [RTC DS1302](https://www.tokopedia.com/rajacell/rtc-ds1302-battery-cr3032-real-time-clock-module-for-arduinoo)
 - [220v to 9v Power Switching](https://www.tokopedia.com/kedaianekabarang/9v-500ma-4-5w-switching-power-supply-module-modul-ac-dc-adaptor)
 - [Robodyn AC Dimmer](https://www.tokopedia.com/kyware/ac-light-dimmer-robotdyn-module-1-channel-220v-110v-logic-5v-3-3v)
+- [Power Socket + Saklar IEC 320 C14 220V 250V 10A](https://www.tokopedia.com/rajacell/power-socket-saklar-iec-320-c14-220v-250v-10a-colokan-listrik-3-pin)
+- [Kabel AWG 22 awg22 ](https://www.tokopedia.com/rajacell/kabel-awg-22-awg22-serabut-tembaga-putih-eceran-1meter-jumper-cable-kuning)
+- [socket soket ac outlet rrt](https://www.tokopedia.com/pcmjakarta/socket-soket-ac-outlet-rrt?extParam=ivf%3Dfalse%26src%3Dsearch)
 
 
 Referensi
