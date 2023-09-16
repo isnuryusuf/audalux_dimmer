@@ -16,8 +16,8 @@
 https://youtu.be/7hPapCJz-5I
 
 # Diagram
-![image](https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/92906ee1-4650-4caf-9940-87114c25d6e8)
-![image](https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/18e036f5-117d-414d-958b-32275e55fb83)
+
+![image](https://github.com/isnuryusuf/audalux_dimmer/assets/5492467/a9ebe972-4b32-41c0-a27d-1056b8dc2876)
 
 
 
