@@ -73,6 +73,7 @@ Bahan-bahan:
 - [Power Socket + Saklar IEC 320 C14 220V 250V 10A](https://www.tokopedia.com/rajacell/power-socket-saklar-iec-320-c14-220v-250v-10a-colokan-listrik-3-pin)
 - [Kabel AWG 22 awg22 ](https://www.tokopedia.com/rajacell/kabel-awg-22-awg22-serabut-tembaga-putih-eceran-1meter-jumper-cable-kuning)
 - [Socket soket cover AC 2 way outlet bakelit](https://www.tokopedia.com/grosirlegend/socket-soket-cover-ac-2-way-outlet-bakelit)
+- [Kabel Komputer-Kabel Power](https://www.tokopedia.com/586shop/kabel-komputer-kabel-power-cpu-pc-kabel-magicom-1-8m-ful)
 
 
 Referensi
