@@ -1,7 +1,12 @@
-#include <RBDdimmer.h>
+ <RBDdimmer.h>
 #include "LiquidCrystal.h"
 #include <EEPROM.h>
 #include <virtuabotixRTC.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#define tempPin A0
+OneWire onewire(tempPin);
+DallasTemperature sensors(&onewire);
 #define USE_SERIAL  Serial
 #define outputPin  3
 #define zerocross  2 // for boards with CHANGEBLE input pins
@@ -124,7 +129,8 @@ void setup() {
 
   //debuging mode
   USE_SERIAL.begin(9600); 
-  dimmer.begin(NORMAL_MODE, ON); //dimmer initialisation: name.begin(MODE, STATE) 
+  dimmer.begin(NORMAL_MODE, ON); //dimmer initialisation: name.begin(MODE, STATE)
+  sensors.begin();
   USE_SERIAL.println("Audalux Reef LED ");
   //USE_SERIAL.println("Set value");
 
@@ -235,6 +241,10 @@ void loop() {
 }
 
 /* ================================================== */
+sensors.requestTemperatures();
+float tempC = sensors.getTempCByIndex(0);
+Serial.print("TempC: ");
+Serial.println(tempC);
 /* END LOOP                                           */
 /* ================================================== */
 
