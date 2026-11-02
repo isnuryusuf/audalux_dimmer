@@ -19,10 +19,14 @@ dimmerLamp dimmer(outputPin); //initialase port for dimmer for MEGA, Leonardo, U
 int outVal = 0;
 
 // relay pins
-#define relay1      2
-#define relay2      2
-#define relay3      2
-#define relay4      2
+// NOTE: original had relay1..4 all defined as pin 2 (copy-paste error) and
+// all colliding with `zerocross` (pin 2).  Map to unique hardware pins you
+// actually wire relays to; these are left unused until the relay driver is
+// added.  Pins 10-13 are free (LCD uses 4-9, dimmer uses 3, zero-cross 2).
+#define relay1      10
+#define relay2      11
+#define relay3      12
+#define relay4      13
 
 // define pins of RTC module
 #define rtcVCC      A5
@@ -79,6 +83,23 @@ int eepromHourON2 = 0;
 int eepromHourOF2 = 0;
 int eepromMinON2 = 0;
 int eepromMinOF2 = 0;
+
+// -----------------------------------------------------------------------------
+// Forward declarations (used by loop() before the definitions below)
+// -----------------------------------------------------------------------------
+void relayAction(int adrON, int adrOF, int pos, int nowMinutes);
+void setRTC();
+void setPin();
+void setIntense();
+void setupChooseValue(int HourNew, int MinNew, byte Address, byte Pos);
+void setupChooseValue2(int HourNew2, int MinNew2, byte Address2, byte Pos);
+void setupChooseValueSetRTC(int HourNew, int MinNew, byte Pos);
+void setupShowValue(int Hour, int Min, int Pos);
+void setupShowValue2(int Hour, int Min, int Pos);
+int read_LCD_buttons();
+void displayTime();
+void print2digits(int number);
+void runSchedule(unsigned long nowSeconds);
 
 int testDimmer = 0;
 
@@ -137,14 +158,13 @@ void loop() {
   displayTime();
 
   // tampilkan intensitas yang berjalan
-  lcd.setCursor(13, 0); 
-  lcd.print(dimmer.getPower());
-  if (outVal <= 9) {
+  int outVal = dimmer.getPower();
+  lcd.print(outVal);
+  if (outVal < 10) {
     lcd.print("% ");
-  } else if (outVal >= 10 && outVal <= 99) {
+  } else {
     lcd.print("%");
   }
-  lcd.print("%");
 
   // set & tampilkan status schedule berdasarkan data eeprom
   // * = schedule aktif, + = schedule berikutnya dimulai hari ini
