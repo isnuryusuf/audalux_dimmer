@@ -78,9 +78,6 @@
 
 ## Demo
 
-> Autoplay demo — the video starts **muted and looping** so the README plays without user action. (GitHub blocks sound-on autoplay in `<iframe>`; the thumbnail below works on every platform.)
-
-<iframe width="100%" height="480" src="https://www.youtube.com/embed/7hPapCJz-5I?autoplay=1&mute=1&loop=1&playlist=7hPapCJz-5I&modestbranding=1&controls=0&iv_load_policy=3&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ![Audalux Dimmer Demo](https://img.youtube.com/vi/7hPapCJz-5I/hqdefault.jpg)
 
