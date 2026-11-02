@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; background: #f5f5f5; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+  .card { background: #211f1f; color: #fff; border-radius: 14px; padding: 24px; width: 1100px; box-shadow: 0 8px 28px rgba(0,0,0,.35); }
+  h1 { font-size: 19px; margin: 0 0 6px; letter-spacing: .2px; }
+  .sub { font-size: 13px; color: #b0b0b0; margin: 0 0 14px; }
+  .sub strong { color: #fff; }
+  svg { width: 100%; height: auto; max-width: 100%; display: block; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Audalux Dimmer — Wiring Schematic</h1>
+  <p class="sub"><strong>Microcontroller:</strong> Arduino Uno (ATmega328P) &nbsp;|&nbsp; <strong>Control:</strong> LCD 16×2 + 5-button keypad &nbsp;|&nbsp; <strong>Clock:</strong> DS1302 RTC &nbsp;|&nbsp; <strong>Load driver:</strong> Robodyn AC dimmer</p>
+
+  <svg viewBox="0 0 1100 640" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Roboto, Arial, sans-serif">
+
+    <!-- ---------- Mains / AC power section ---------- -->
+    <g transform="translate(60, 20)">
+      <rect x="0" y="0" width="360" height="560" rx="8" fill="#1e1d1d" stroke="#3a3535" stroke-width="2"/>
+      <text x="180" y="20" text-anchor="middle" fill="#8fd38f" font-size="13" font-weight="bold" letter-spacing="2">AC INPUT (220 V)</text>
+
+      <!-- IEC C14 socket -->
+      <rect x="10" y="118" width="140" height="32" rx="6" fill="#2a2727" stroke="#5a5252" stroke-width="1.5"/>
+      <text x="80" y="136" text-anchor="middle" fill="#cfd6da" font-size="12" font-weight="bold">IEC 320 C14</text>
+      <text x="80" y="148" text-anchor="middle" fill="#8f8a8a" font-size="9">220 V AC · OUTLET</text>
+
+      <!-- POWER switch -->
+      <rect x="10" y="160" width="140" height="40" rx="4" fill="#2a2727" stroke="#5a5252" stroke-width="1.5"/>
+      <text x="80" y="178" text-anchor="middle" fill="#cfd6da" font-size="11" font-weight="bold">POWER</text>
+      <text x="80" y="190" text-anchor="middle" fill="#8f8a8a" font-size="9">SW</text>
+
+      <!-- AC IN to Dimmer AC-input box (zero-cross) -->
+      <rect x="10" y="210" width="140" height="190" rx="6" fill="#232020" stroke="#4a4545" stroke-width="1.5"/>
+      <text x="80" y="232" text-anchor="middle" fill="#8fd38f" font-size="11" font-weight="bold">AC Input</text>
+      <text x="80" y="244" text-anchor="middle" fill="#8f8a8a" font-size="9">(Dimmer AC in)</text>
+      <text x="80" y="256" text-anchor="middle" fill="#8f8a8a" font-size="9">(Zero-Cross)</text>
+      <text x="80" y="268" text-anchor="middle" fill="#8f8a8a" font-size="9">(Triac driver IC)</text>
+
+      <!-- LED indicator (power LED) on AC side -->
+      <circle cx="80" cy="340" r="14" fill="#ffd080" stroke="#8f8a8a" stroke-width="1.5"/>
+      <text x="80" y="362" text-anchor="middle" fill="#5a5252" font-size="10" font-weight="bold">PWR LED</text>
+      <line x1="80" y1="354" x2="80" y2="395" stroke="#4a4545" stroke-width="1.5"/>
+      <text x="40" y="392" fill="#8f8a8a" font-size="9" text-anchor="end">LED to GND</text>
+    </g>
+
+    <!-- ---------- DC / CONTROL side ---------- -->
+    <g transform="translate(470, 20)">
+      <rect x="0" y="0" width="600" height="560" rx="8" fill="#1e1d1d" stroke="#3a3535" stroke-width="2"/>
+      <text x="300" y="20" text-anchor="middle" fill="#8fd38f" font-size="13" font-weight="bold" letter-spacing="2">DC / CONTROL</text>
+
+      <!-- Arduino Uno (big chip block) -->
+      <rect x="10" y="60" width="580" height="230" rx="12" fill="#241f1f" stroke="#4a4545" stroke-width="2"/>
+      <!-- Microcontroller die -->
+      <rect x="90" y="78" width="400" height="170" rx="8" fill="#261f1f" stroke="#5a6a7a" stroke-width="1.5"/>
+      <text x="290" y="128" text-anchor="middle" fill="#8fd38f" font-size="12" font-weight="bold">ATmega328P</text>
+      <text x="290" y="140" text-anchor="middle" fill="#8f8a8a" font-size="9">(U1)</text>
+
+      <!-- Pin header labels -->
+      <g font-size="9" fill="#e0e0e0">
+        <!-- Analog pins A0-A5 -->
+        <rect x="30" y="255" width="60" height="6" rx="3" fill="#5a6a7a"/>
+        <text x="60" y="264" text-anchor="middle">A0</text>
+        <rect x="68" y="255" width="60" height="6" rx="3" fill="#5a6a7a"/>
+        <text x="98" y="264" text-anchor="middle">A1</text>
+        <rect x="106" y="255" width="60" height="6" rx="3" fill="#5a6a7a"/>
+        <text x="136" y="264" text-anchor="middle">A2</text>
+        <rect x="144" y="255" width="60" height="6" rx="3" fill="#5a6a7a"/>
+        <text x="174" y="264" text-anchor="middle">A3</text>
+        <rect x="182" y="255" width="60" height="6" rx="3" fill="#5a6a7a"/>
+        <text x="212" y="264" text-anchor="middle">A4</text>
+        <rect x="220" y="255" width="60" height="6" rx="3" fill="#5a6a7a"/>
+        <text x="250" y="264" text-anchor="middle">A5</text>
+        <rect x="30" y="330" width="60" height="6" rx="3" fill="#5a6a7a"/>
+        <text x="60" y="339" text-anchor="middle">D0</text>
+        <rect x="68" y="330" width="60" height="6" rx="3" fill="#5a6a7a"/>
+        <text x="98" y="339" text-anchor="middle">D1</text>
+        <rect x="106" y="330" width="60" height="6" rx="3" fill="#5a6a7a"/>
+        <text x="136" y="339" text-anchor="middle">D2</text>
+        <rect x="144" y="330" width="60" height="6" rx="3" fill="#5a6a7a"/>
+        <text x="174" y="339" text-anchor="middle">D3</text>
+        <rect x="182" y="330" width="60" height="6" rx="3" fill="#5a6a7a"/>
+        <text x="212" y="339" text-anchor="middle">D4</text>
+        <rect x="220" y="330" width="60" height="6" rx="3" fill="#5a6a7a"/>
+        <text x="250" y="339" text-anchor="middle">D5</text>
+        <rect x="258" y="330" width="60" height="6" rx="3" fill="#5a6a7a"/>
+        <text x="288" y="339" text-anchor="middle">D6</text>
+        <rect x="296" y="330" width="60" height="6" rx="3" fill="#5a6a7a"/>
+        <text x="326" y="339" text-anchor="middle">D7</text>
+      </g>
+      <text x="300" y="470" text-anchor="middle" fill="#5a5252" font-size="8">Pin header D0–D7 (Digital) · A0–A5 (Analog)</text>
+
+      <!-- LCD 16x2 (key pad shield connected) -->
+      <rect x="10" y="490" width="580" height="60" rx="6" fill="#261f1f" stroke="#5a6a7a" stroke-width="1.5"/>
+      <text x="300" y="512" text-anchor="middle" fill="#8fd38f" font-size="11" font-weight="bold">HD44780 LiquidCrystal 16×2</text>
+      <text x="300" y="526" text-anchor="middle" fill="#8f8a8a" font-size="9">RS=8 · E=9 · D4–D7=4-5-6-7<br>KeyPad = A0</text>
+      <text x="300" y="538" text-anchor="middle" fill="#8f8a8a" font-size="8">(via LCD Keypad Shield)</text>
+    </g>
+
+    <!-- ---------- RTC SECTION (right side) ---------- -->
+    <g transform="translate(1040, 20)">
+      <rect x="0" y="0" width="440" height="560" rx="8" fill="#1e1d1d" stroke="#3a3535" stroke-width="2"/>
+      <text x="220" y="22" text-anchor="middle" fill="#8fd38f" font-size="13" font-weight="bold" letter-spacing="1">DS1302 RTC</text>
+      <text x="220" y="36" text-anchor="middle" fill="#8f8a8a" font-size="9">realtime clock + calendar</text>
+
+      <!-- RTC module -->
+      <rect x="120" y="60" width="200" height="150" rx="8" fill="#232020" stroke="#5a6a7a" stroke-width="2"/>
+      <text x="220" y="108" text-anchor="middle" fill="#cfd6da" font-size="12" font-weight="bold">DS1302</text>
+      <text x="220" y="122" text-anchor="middle" fill="#8f8a8a" font-size="10">(RTC module)</text>
+
+      <!-- DS1302 pins: SCLK=3, IO=2, CE=1 (labeled as A3,A2,A1) -->
+      <g font-size="9" fill="#e0e0e0">
+        <rect x="82" y="160" width="60" height="6" rx="3" fill="#4a5a6a"/>
+        <text x="112" y="170" text-anchor="middle" font-size="9">SCLK → A3</text>
+        <rect x="82" y="172" width="60" height="6" rx="3" fill="#4a5a6a"/>
+        <text x="112" y="182" text-anchor="middle" font-size="9">IO → A2</text>
+        <rect x="82" y="184" width="60" height="6" rx="3" fill="#4a5a6a"/>
+        <text x="112" y="194" text-anchor="middle" font-size="9">CE → A1</text>
+        <rect x="82" y="196" width="60" height="6" rx="3" fill="#4a5a6a"/>
+        <text x="112" y="206" text-anchor="middle" font-size="9">VCC → A5 (5V OUT)</text>
+        <rect x="82" y="208" width="60" height="6" rx="3" fill="#4a5a6a"/>
+        <text x="112" y="218" text-anchor="middle" font-size="9">GND → A4 (GND OUT)</text>
+      </g>
+      <text x="220" y="240" text-anchor="middle" fill="#5a5252" font-size="8">(library: DS1302,<br>SCLK=3, IO=2, CE=1)</text>
+    </g>
+
+    <!-- ---------- RELAY SECTION (left side) ---------- -->
+    <g transform="translate(0, 300)">
+      <rect x="0" y="0" width="360" height="260" rx="8" fill="#1e1d1d" stroke="#3a3535" stroke-width="2"/>
+      <text x="180" y="22" text-anchor="middle" fill="#8fd38f" font-size="12" font-weight="bold" letter-spacing="1">RELAYS (unused)</text>
+      <text x="180" y="40" text-anchor="middle" fill="#8f8a8a" font-size="9">#define relay1=10,<br>relay2=11, relay3=12, relay4=13</text>
+      <text x="180" y="60" text-anchor="middle" fill="#5a5252" font-size="9">(duplicate = 2)</text>
+      <rect x="90" y="70" width="180" height="130" rx="6" fill="#232020" stroke="#5a6a7a" stroke-width="1.5"/>
+      <text x="180" y="118" text-anchor="middle" fill="#8fd38f" font-size="11" font-weight="bold">RELAY DRIVER</text>
+      <text x="180" y="134" text-anchor="middle" fill="#8f8a8a" font-size="9">(Not wired —<br>awaiting hardware)</text>
+      <text x="180" y="170" text-anchor="middle" fill="#8f8a8a" font-size="9">relay1 relay2<br>relay3 relay4</text>
+    </g>
+
+    <!-- ---------- Robodyn dimmer (center bottom) ---------- -->
+    <g transform="translate(390, 560)">
+      <rect x="40" y="0" width="320" height="110" rx="8" fill="#232020" stroke="#4a4545" stroke-width="2"/>
+      <text x="200" y="28" text-anchor="middle" fill="#8fd38f" font-size="12" font-weight="bold">Robodyn AC Light Dimmer</text>
+      <text x="200" y="46" text-anchor="middle" fill="#8f8a8a" font-size="9">U1 · Triac-based phase-cut</text>
+      <text x="200" y="60" text-anchor="middle" fill="#8f8a8a" font-size="9">P1 pot · P2 preset</text>
+      <text x="200" y="74" text-anchor="middle" fill="#8f8a8a" font-size="9">Logic = 5 V (Arduino)</text>
+
+      <!-- dimmer connection block -->
+      <rect x="15" y="82" width="290" height="58" rx="5" fill="#2a2727" stroke="#5a6a7a" stroke-width="1.5">
+        <text x="160" y="105" text-anchor="middle" fill="#cfd6da" font-size="10" font-weight="bold">ROBODYN DIMMER</text>
+        <text x="160" y="118" text-anchor="middle" fill="#8f8a8a" font-size="9">Logic: +5V / GND</text>
+        <text x="160" y="128" text-anchor="middle" fill="#8f8a8a" font-size="9">Triac gate drive</text>
+      </rect>
+    </g>
+
+    <!-- ---------- DC Power section (right of Arduino) ---------- -->
+    <g transform="translate(740, 280)">
+      <rect x="0" y="0" width="160" height="220" rx="6" fill="#232020" stroke="#4a4545" stroke-width="1.5"/>
+      <text x="80" y="22" text-anchor="middle" fill="#8fd38f" font-size="11" font-weight="bold">9 V DC</text>
+      <text x="80" y="40" text-anchor="middle" fill="#8f8a8a" font-size="8">Power</text>
+      <rect x="10" y="50" width="140" height="50" rx="4" fill="#2a2727" stroke="#5a6a7a" stroke-width="1.5"/>
+      <text x="80" y="75" text-anchor="middle" fill="#cfd6da" font-size="10" font-weight="bold">9 V PSU</text>
+      <text x="80" y="90" text-anchor="middle" fill="#8f8a8a" font-size="9">(power module)</text>
+      <line x1="80" y1="100" x2="80" y2="150" stroke="#4a4545" stroke-width="1.5"/>
+      <circle cx="80" cy="158" r="12" fill="#ffd080" stroke="#8f8a8a" stroke-width="1.5"/>
+      <text x="80" y="168" text-anchor="middle" fill="#5a5252" font-size="9" font-weight="bold">5 V</text>
+      <text x="80" y="176" text-anchor="middle" fill="#5a5252" font-size="9" font-weight="bold">GND</text>
+    </g>
+
+    <!-- ---------- Lighting side (bottom right) ---------- -->
+    <g transform="translate(650, 560)">
+      <rect x="0" y="0" width="200" height="90" rx="6" fill="#232020" stroke="#4a4545" stroke-width="1.5"/>
+      <text x="100" y="26" text-anchor="middle" fill="#8fd38f" font-size="11" font-weight="bold">LIGHT</text>
+      <text x="100" y="42" text-anchor="middle" fill="#8f8a8a" font-size="9">Audalux LED</text>
+      <text x="100" y="54" text-anchor="middle" fill="#8f8a8a" font-size="9">(Philips coral)</text>
+      <line x1="20" y1="26" x2="60" y2="26" stroke="#4a4545" stroke-width="1.5"/>
+      <circle cx="60" cy="26" r="6" fill="#ffd080" stroke="#8f8a8a" stroke-width="1"/>
+      <text x="52" y="42" text-anchor="middle" fill="#8f8a8a" font-size="9">dimmer</text>
+    </g>
+
+    <!-- ---------- BOTTOM control legend ---------- -->
+    <rect x="0" y="0" width="1100" height="0" fill="transparent"/>
+    <g font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="9" fill="#8f8a8a">
+      <text x="60" y="20">D0–D7 = Digital I/O · A0–A5 = Analog</text>
+      <text x="60" y="34">A0 = Keypad · A1 = RTC CE · A2 = RTC IO · A3 = RTC SCLK · A4 = RTC GND · A5 = RTC VCC</text>
+      <text x="60" y="48">RST reset · +5 V = 5 V DC · GND = common ground</text>
+      <text x="60" y="62">LCD RS=8, E=9, D4=4, D5=5, D6=6, D7=7 (via keypad shield)</text>
+    </g>
+
+  </svg>
+</div>
+</body>
+</html>
